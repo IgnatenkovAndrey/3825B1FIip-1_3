@@ -1,4 +1,5 @@
 #include "tset.h"
+#include <stdexcept>
 
 TSet::TSet(int mp) : MaxPower(mp), BitField(mp) {}
 TSet::TSet(const TSet& s) : MaxPower(s.MaxPower), BitField(s.BitField) {}
@@ -47,10 +48,16 @@ TSet TSet::operator-(const int Elem) {
     return result;
 }
 TSet TSet::operator+(const TSet& s) {
+    if (MaxPower != s.MaxPower) {
+        throw std::invalid_argument("Different set universes");
+    }
     return TSet(BitField | s.BitField);
 }
 
 TSet TSet::operator*(const TSet& s) {
+    if (MaxPower != s.MaxPower) {
+        throw std::invalid_argument("Different set universes");
+    }
     return TSet(BitField & s.BitField);
 }
 

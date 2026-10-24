@@ -143,7 +143,7 @@ TEST(Set, SubtractInvalidElement) {
 }
 
 TEST(Set, Union) {
-    TSet first(5);
+    TSet first(8);
     TSet second(8);
     first.InsElem(2);
     second.InsElem(6);
@@ -156,7 +156,7 @@ TEST(Set, Union) {
 }
 
 TEST(Set, Intersection) {
-    TSet first(5);
+    TSet first(8);
     TSet second(8);
     first.InsElem(1);
     first.InsElem(2);
@@ -243,4 +243,50 @@ TEST(Set, InputWithLetter) {
 
     EXPECT_TRUE(stream.fail());
     EXPECT_EQ(set, before);
+}
+
+TEST(Set, UnionOfDifferentUniverses) {
+    TSet first(5);
+    TSet second(8);
+    first.InsElem(2);
+    second.InsElem(6);
+
+    EXPECT_THROW(first + second, std::invalid_argument);
+    EXPECT_THROW(second + first, std::invalid_argument);
+    EXPECT_EQ(first.GetMaxPower(), 5);
+    EXPECT_EQ(second.GetMaxPower(), 8);
+    EXPECT_EQ(first.IsMember(2), 1);
+    EXPECT_EQ(second.IsMember(6), 1);
+}
+
+TEST(Set, IntersectionOfDifferentUniverses) {
+    TSet first(5);
+    TSet second(8);
+    first.InsElem(2);
+    second.InsElem(2);
+
+    EXPECT_THROW(first * second, std::invalid_argument);
+    EXPECT_THROW(second * first, std::invalid_argument);
+    EXPECT_EQ(first.IsMember(2), 1);
+    EXPECT_EQ(second.IsMember(2), 1);
+}
+
+TEST(Set, EmptySetsOfDifferentUniverses) {
+    TSet first(5);
+    TSet second(8);
+
+    EXPECT_THROW(first + second, std::invalid_argument);
+    EXPECT_THROW(first * second, std::invalid_argument);
+}
+
+TEST(Set, OperationsInEmptyUniverse) {
+    TSet first(0);
+    TSet second(0);
+    TSet united = first + second;
+    TSet common = first * second;
+
+    EXPECT_EQ(united.GetMaxPower(), 0);
+    EXPECT_EQ(common.GetMaxPower(), 0);
+    EXPECT_EQ(united, first);
+    EXPECT_EQ(common, first);
 }
